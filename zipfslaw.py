@@ -68,5 +68,51 @@ print "Mean: ", math.exp(brown_word_fit.lognormal_positive.mu + 0.5*brown_word_f
 print "Median: ", math.exp(brown_word_fit.lognormal_positive.mu)
 print "Mode: ", math.exp(brown_word_fit.lognormal_positive.mu - brown_word_fit.lognormal_positive.sigma*brown_word_fit.lognormal_positive.sigma)
 
-brown_word_fit.distribution_compare('power_law', 'lognormal_positive')
+print brown_word_fit.distribution_compare('power_law', 'lognormal_positive')
 
+###example 2
+
+#tagged_corpus = nltk.corpus.brown.tagged_words(tagset='universal')
+#brown_wt_counts = collections.Counter((w.lower(), t) for (w, t) in tagged_corpus)
+#brown_wt_zipf = Zipf("Brown corpus word-tag frequencies", brown_wt_counts)
+#brown_wt_data = numpy.array(brown_wt_counts.values())
+#brown_wt_fit = powerlaw.Fit(brown_wt_data, discrete=True)
+
+###example 3
+
+populations = dict()
+with open('./Top5000Population.csv', 'r') as csvfile :
+    cityreader = csv.reader(csvfile)
+    for row in cityreader:
+        populations[row[0]+", "+row[1]] = int(row[2].replace(",", ""))
+
+cities_zipf = Zipf("Populations of US cities", populations)
+cities_data = numpy.array(populations.values())
+cities_fit = powerlaw.Fit(cities_data, discrete=True)
+
+cities_zipf.graph()
+power_law_graph(cities_fit)
+
+print cities_fit.power_law.alpha
+print cities_fit.distribution_compare('power_law', 'lognormal_positive')
+
+###exercise
+words = dict()
+file = open("./words.txt")
+index = 0
+while 1:
+    line = file.readline()
+    if not line:
+        break
+    words[index]=int(line.replace("\n", ""))
+    index=index+1
+
+words_zipf = Zipf("The frequency of occurrence of unique words", words)
+words_data = numpy.array(words.values())
+words_fit = powerlaw.Fit(words_data, discrete=True)
+
+words_zipf.graph()
+power_law_graph(words_fit)
+
+print words_fit.power_law.alpha
+print words_fit.distribution_compare('power_law', 'lognormal_positive')
